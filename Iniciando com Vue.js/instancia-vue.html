@@ -7,8 +7,11 @@
     <body>
         <div id="app">
             {{ 2 + 2 }}
-            <input type="text" v-model="variavel">
-            {{variavel}}
+            <input type="text" v-model="variavel">{{variavel}}
+            <input type="text" v-model="variavel2">{{variavel2}}
+            <p>
+                {{parseInt(variavel) + parseInt(variavel2)}}
+            </p> 
         </div>
 
         <!-- development version, includes helpful console warnings -->
@@ -17,7 +20,8 @@
             new Vue({
                 el:"#app",
                 data: {
-                    variavel:''
+                    variavel:3,
+                    variavel2:10
                 }
             })
         </script>
