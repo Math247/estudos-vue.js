@@ -12,7 +12,8 @@
             <div class="row">
                 <h3>Campeonato Brasileiro - Série A - 2020</h3>
             </div>
-            <input type="text" :value="gols" :id="gols+'id'">
+            <input type="text" :value="gols" :id="gols+'id'" @input="pegarValor($event)">
+            <button class="btn btn-primary" @click="showAlert">Fim de Jogo</button>
         </div>
 
         <!-- development version, includes helpful console warnings -->
@@ -22,6 +23,14 @@
                 el:"#app",
                 data: {
                     gols: 2
+                },
+                methods: {
+                    showAlert(){
+                        alert("Fim de jogo!")
+                    },
+                    pegarValor($event){
+                        console.log($event)
+                    }
                 }
             })
         </script>
