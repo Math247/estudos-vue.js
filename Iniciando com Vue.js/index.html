@@ -12,7 +12,7 @@
             <div class="row">
                 <h3>Campeonato Brasileiro - Série A - 2020</h3>
             </div>
-            <input type="text" :value="gols" :id="gols+'id'" @input="pegarValor($event)">
+            <input type="text" :id="gols+'id'" v-model="gols">
             <button class="btn btn-primary" @click="showAlert">Fim de Jogo</button>
         </div>
 
