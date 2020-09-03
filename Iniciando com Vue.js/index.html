@@ -6,6 +6,12 @@
         <title>School Of Net - Vue.js - Campeonato Brasileiro</title>
         <!-- CSS only -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <style>
+            .escudo{
+                width: 30px;
+                height: 30px;
+            }
+        </style>
     </head>
     <body>
         <div id="app" class="container">
@@ -19,11 +25,16 @@
             </div>
             <div>
             </div>
-            <input type="text" class="form-control" v-model="novoJogo.casa.gols">
-            {{novoJogo.casa.time ? novoJogo.casa.time.nome: ''}}
-            <input type="text" class="form-control" v-model="novoJogo.fora.gols">
-            {{novoJogo.fora.time ? novoJogo.fora.time.nome: ''}}
-            <button class="btn btn-primary" @click="showAlert">Fim de Jogo</button>
+            <form class="form-inline">
+                <input type="text" class="form-control col-md-1" v-model="novoJogo.casa.gols">
+                {{novoJogo.casa.time ? novoJogo.casa.time.nome: ''}}
+                <img :src="novoJogo.casa.time ? novoJogo.casa.time.escudo: ''" alt="" class="escudo">
+                <span>X</span>
+                <img :src="novoJogo.fora.time ? novoJogo.fora.time.escudo: ''" alt="" class="escudo">
+                {{novoJogo.fora.time ? novoJogo.fora.time.nome: ''}}
+                <input type="text" class="form-control col-md-1" v-model="novoJogo.fora.gols">
+                <button type="button" class="btn btn-primary" @click="fimJogo">Fim de Jogo</button>
+            </form>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -37,7 +48,7 @@
                 <tbody>
                     <tr v-for="time in times">
                         <td>     
-                            <img :src="time.escudo" alt="">
+                            <img :src="time.escudo" alt="" class="escudo">
                             {{time.nome}}
                         </td>
                         <td>{{time.pontos}}</td>
@@ -61,6 +72,44 @@
                     this.pontos = 0;
                     this.gm = 0;
                     this.gs = 0;
+                }
+                fimJogo(timeVisitante, golsMarcados, golsSofridos){
+                    if(this.foiEmpate(golsMarcados, golsSofridos)){
+                        this.empate(golsMarcados, golsSofridos)
+                        timeVisitante.empate(golsMarcados, golsSofridos);
+                    }
+                    if(this.foiVitoria(golsMarcados, golsSofridos)){
+                        this.vitoria(golsMarcados, golsSofridos);
+                        timeVisitante.derrota(golsSofridos, golsMarcados)
+                    }else{
+                        this.derrota(golsMarcados, golsSofridos);
+                        timeVisitante.derrota(golsSofridos, golsMarcados)
+
+                    }
+                }
+                foiEmpate(golsMarcados, golsSofridos){
+                    return golsMarcados === golsSofridos
+                }
+                foiVitoria(golsMarcados, golsSofridos){
+                    return golsMarcados > golsSofridos;
+                }
+
+                empate(golsMarcados, golsSofridos){
+                    this.atualizarInformações(1, golsMarcados, golsSofridos);
+                }
+
+                vitoria(golsMarcados, golsSofridos){
+                    this.atualizarInformações(3, golsMarcados, golsSofridos);
+                }
+
+                derrota(golsMarcados, golsSofridos){
+                    this.atualizarInformações(0, golsMarcados, golsSofridos);
+                }
+                
+                atualizarInformações(pontos, golsMarcados, golsSofridos){
+                    this.pontos += pontos;
+                    this.gm += golsMarcados
+                    this.gs += golsSofridos;
                 }
             }
 
@@ -116,6 +165,13 @@
                         this.novoJogo.fora.time = this.times[indiceFora];
                         this.novoJogo.fora.gols = 0;
                         console.log(this.novoJogo);
+                    },
+                    fimJogo(){
+                        var golsMarcados = parseInt(this.novoJogo.casa.gols);
+                        var golsSofridos = parseInt(this.novoJogo.fora.gols);
+                        var timeAdversario = this.novoJogo.fora.time;
+                        var timeCasa = this.novoJogo.casa.time;
+                        timeCasa.fimJogo(timeAdversario, golsMarcados, golsSofridos);
                     }
                 }
             })
